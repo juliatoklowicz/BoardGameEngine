@@ -15,19 +15,35 @@ class t_user(models.Model):
     Password = models.CharField(max_length=50, null=False, blank=False)
 
 
+# "%(app_label)s_%(class)user1_id"
 class t_friend_list(models.Model):
-    user1_id = models.ForeignKey(t_user, on_delete=models.CASCADE),
-    user2_Id = models.ForeignKey(t_user, on_delete=models.CASCADE),
+    user1_id = models.ForeignKey(t_user,
+                                 null=False,
+                                 blank=False,
+                                 on_delete=models.CASCADE,
+                                 related_name="user1_id")
+    user2_Id = models.ForeignKey(t_user,
+                                 null=False,
+                                 blank=False,
+                                 on_delete=models.CASCADE,
+                                 related_name="user2_id")
+
+
     Last_Seen = models.DateField(auto_now=True)
+
     class Meta:
-        #unique_together = ['user1_id', 'user2_id']
         constraints = [
             # Ensures constraint on DB level, raises IntegrityError (500 on debug=False)
-            models.CheckConstraint(check=Q(F('user1_id') != F('user2_id')), name='check_same_user_IDs',),
+            #models.CheckConstraint(check=~Q((F('user1_id') == F('user2_id'))), name='check_same_user_IDs'), #django upraszcza to sb do TRUE albo false
+            #bo rozumie to jako to samo pole, tzreba dac funkcje z importa gdzies z zewnatrz, albo w BD recznie to dodac
             models.UniqueConstraint(fields=['user1_id', 'user2_Id'], name="cant be your own friend")
         ]
 
 
+class t_user_activity:
+    User_Id = models.ForeignKey(t_user, on_delete=models.CASCADE)
+    Activity_Type = models.CharField(max_length=30, unique=True, null=False, blank=False)
+    Activity_Timestamp = models.DateTimeField()
 
     # class Meta:
     #    constraints = (
@@ -39,27 +55,6 @@ class t_friend_list(models.Model):
     #        # raise error for field
     #        raise ValidationError({'same_ID2': _('user cannot be his own friend.')})
 
-
-class t_user_activity:
-    User_Id = models.ForeignKey(t_user, on_delete=models.CASCADE),
-    Activity_Type = models.CharField(max_length=30, unique=True, null=False, blank=False),
-    Activity_Timestamp = models.DateTimeField(),
-
-    def clean(self):
-        # Ensures constraint on model level, raises ValidationError
-        if self.User_Id == self.User2_Id:
-            # raise error for field
-            raise ValidationError({'same_ID2': _('user cannot be his own friend.')})
-
-    '''
-    Constraint fk_user1 FOREIGN KEY(User_Id) References t_user(Id),
-    Constraint fk_user2 FOREIGN KEY(User2_Id) References t_user(Id),
-    Constraint different_User_Id check (User_Id <> User2_Id),
-    Unique (User_Id,User2_Id)
-    '''
-
-
-# TODO: t_games, t_genre, t_game_genre, t_review,
 
 class t_genre(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -94,7 +89,7 @@ class t_game(models.Model):
         ]
 
 
-class t_game_denre(models.Model):
+class t_game_genre(models.Model):
     gamd_id = models.ForeignKey(t_game,
                                 on_delete=models.CASCADE)
     genre_id = models.ForeignKey(t_genre,
@@ -127,5 +122,3 @@ class t_user_game(models.Model):
 
     game_id = models.ForeignKey(t_game,
                                 on_delete=models.CASCADE)
-
-
