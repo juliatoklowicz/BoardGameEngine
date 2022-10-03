@@ -7,6 +7,7 @@ from django.http import JsonResponse
 import psycopg2 as postgre
 
 
+
 # Create your views here.
 
 # wyswietl wszytskie gry
@@ -24,3 +25,6 @@ def getAllGames(request):
         j += 1
     # jsone={"wszystkie":"gry"}
     return JsonResponse(jsone)  # HttpResponse(stri)
+
+def testing():
+    pass

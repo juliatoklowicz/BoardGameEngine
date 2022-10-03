@@ -87,7 +87,8 @@ DATABASES = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'djangoCourseDB',#nazwa naszej bazy danych
+        #myDB testing database
+        'NAME': 'myDB',#nazwa naszej bazy danych #djangoCourseDB #w tej bazie jest to co z konsoli recznie dodalem #myBD -sluzy do sprawdzania migracji
         'USER': 'postgres',#user moze byc postgres czyli glowny user, ale jak nie glowny to trzeba dac nowemu userowi odpowiednie uprawnienia
         'PASSWORD': 'admin',
         'HOST': 'localhost',
