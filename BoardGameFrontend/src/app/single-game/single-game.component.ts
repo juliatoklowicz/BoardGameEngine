@@ -123,7 +123,6 @@ export class SingleGameComponent implements OnInit {
   }
 
   postReview() {
-    console.log("post");
     this.gamesService.addReview(this.user_id, this.game[0].id, this.user_rating).subscribe(data => {
       console.log(data);
     })
